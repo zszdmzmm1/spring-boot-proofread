@@ -1,5 +1,6 @@
 package com.auefly.spring.boot.security.controller;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,7 +11,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class PageControllerTest {
+class LoginControllerTest {
     @Autowired
     MockMvc mockMvc;
 
@@ -18,6 +19,15 @@ class PageControllerTest {
     void indexTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(MockMvcResultMatchers.view().name("index")
+                )
+        ;
+    }
+
+    @Test
+    void loginTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/login"))
+                .andExpect(MockMvcResultMatchers.view().name("login"))
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("登录"))
                 )
         ;
     }

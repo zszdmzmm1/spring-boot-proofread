@@ -13,10 +13,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 class PageControllerTest {
     @Autowired
     MockMvc mockMvc;
+
     @Test
     void indexTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/"))
-                .andExpect(MockMvcResultMatchers.content().string("Hello world."))
+                .andExpect(MockMvcResultMatchers.view().name("index")
+                )
         ;
     }
 }

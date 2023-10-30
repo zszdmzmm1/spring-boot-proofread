@@ -1,0 +1,103 @@
+/*============ Header Styles  =============*/
+@keyframes ltHover {
+    from {
+        transform: translate(1184px, 614px)
+    }
+    to {
+        transform: translate(1192px, 614px)
+    }
+}
+
+@keyframes dotHover {
+    from {
+        transform: translate(1345.367px, 632px);;
+    }
+    to {
+        transform: translate(1434.367px, 581px);;
+    }
+}
+
+@keyframes gtHover {
+    from {
+        transform: translate(1416px, 616px)
+    }
+    to {
+        transform: translate(1408px, 616px);
+    }
+}
+
+.navbar-site {
+    background-color: #fff;
+    border-bottom: 1px solid $gray-200;
+
+    .navbar-brand svg {
+        &:hover {
+            path#lt {
+                animation-name: ltHover;
+                animation-duration: 1s;
+                animation-fill-mode: forwards;
+            }
+            path#dot {
+                animation-name: dotHover;
+                animation-duration: 1s;
+                animation-fill-mode: forwards;
+            }
+            path#gt {
+                animation-name: gtHover;
+                animation-duration: 1s;
+                animation-fill-mode: forwards;
+            }
+        }
+    }
+
+    .nav-item {
+        margin-left: 1rem;
+    }
+
+    /* 屏幕宽度大于768px的时候生效，.col-md- 级别 */
+    @media (min-width: 768px) {
+        .nav-item-login {
+            margin-left: 2rem;
+
+            a.nav-link {
+                color: $text-muted;
+            }
+        }
+        .nav-item-register {
+            margin-left: 0;
+
+            a.nav-link {
+                color: $text-muted;
+            }
+        }
+    }
+}
+
+// reset navbar-toggler border
+.navbar-light .navbar-toggler {
+  border: none;
+}
+button.navbar-toggler:focus {
+  outline: none!important;
+}
+button.navbar-toggler[aria-expanded=false] .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-text-left' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M2 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z'/></svg>");
+}
+button.navbar-toggler[aria-expanded=true] .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-x' viewBox='0 0 16 16'><path d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/></svg>");
+}
+
+
+.site-info {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+
+  .site-title {
+    font-weight: $font-weight-normal;
+    margin-bottom: 1rem;
+  }
+
+  .site-subtitle {
+    margin-bottom: 0;
+  }
+}

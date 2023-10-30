@@ -1,0 +1,11 @@
+.user-center {
+    margin-bottom: 2rem;
+
+    .nav-link.active {
+        color: $primary;
+    }
+
+    .nav-item i.bi {
+        margin-right: .5rem;
+    }
+}

@@ -1,3 +1,8 @@
 spring:
   application:
     name: LMX
+
+backend:
+  menus:
+    - {name: users, url: /admin/users}
+    - {name: posts, url: /admin/posts}

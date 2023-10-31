@@ -30,8 +30,13 @@ public class PageController {
         return "backend/dashboard";
     }
 
-    @GetMapping("/admin/empty")
-    public String adminEmpty() {
-        return "backend/dashboard-empty";
+    @GetMapping("/admin/users")
+    public String adminUsers() {
+        return "backend/dashboard-users";
+    }
+
+    @GetMapping("/admin/posts")
+    public String adminPosts() {
+        return "backend/dashboard-posts";
     }
 }

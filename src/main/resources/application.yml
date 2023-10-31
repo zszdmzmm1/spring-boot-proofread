@@ -2,6 +2,11 @@ spring:
   application:
     name: LMX
 
+  security:
+    user:
+      name: admin@qq.com
+      password: secret
+
 backend:
   menus:
     - {name: users, url: /admin/users}

@@ -51,3 +51,5 @@ $.fn.extend({
         return this;
     },
 });
+
+import 'admin-lte/dist/js/adminlte.min.js'

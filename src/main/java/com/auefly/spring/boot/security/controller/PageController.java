@@ -24,4 +24,9 @@ public class PageController {
         httpSession.setAttribute("user", new User(email, password));
         return "user";
     }
+
+    @GetMapping("/admin/dashboard")
+    public String adminDashboard() {
+        return "backend/dashboard";
+    }
 }

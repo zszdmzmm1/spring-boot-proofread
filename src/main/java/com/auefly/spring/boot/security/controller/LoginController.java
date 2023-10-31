@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class PageController {
+public class LoginController {
     @GetMapping("/")
     public String index() {
         return "index";
@@ -23,20 +23,5 @@ public class PageController {
     public String loginProcess(@RequestParam String email, @RequestParam String password, HttpSession httpSession) {
         httpSession.setAttribute("user", new User(email, password));
         return "user";
-    }
-
-    @GetMapping("/admin/dashboard")
-    public String adminDashboard() {
-        return "backend/dashboard";
-    }
-
-    @GetMapping("/admin/users")
-    public String adminUsers() {
-        return "backend/dashboard-users";
-    }
-
-    @GetMapping("/admin/posts")
-    public String adminPosts() {
-        return "backend/dashboard-posts";
     }
 }

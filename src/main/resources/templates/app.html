@@ -7,7 +7,7 @@
     <title th:text="${title}">标题</title>
     <meta name="description" content="有想法就去做，努力将想法变成现实">
     <meta name="keywords" content="学,做,学习,实作">
-    <link rel="stylesheet" th:href="@{build/assets/app.css}" href="build/assets/app.css"/>
+    <link rel="stylesheet" th:href="@{/build/assets/app.css}" href="/build/assets/app.css"/>
 </head>
 <body class="d-flex flex-column h-100">
     <header>
@@ -68,7 +68,7 @@
                             </a>
                         </li>
 
-                        <li th:if="${session.user == null}" class="nav-item"><a th:href="@{login}" href="login" class="btn btn-sm btn-primary transition-3d-hover my-3 my-lg-0">登录</a>
+                        <li th:if="${session.user == null}" class="nav-item"><a th:href="@{/login}" href="/login" class="btn btn-sm btn-primary transition-3d-hover my-3 my-lg-0">登录</a>
                         </li>
                         <li th:if="${session.user != null && !session.user.getEmail().split('@')[0].equals('admin')}" class="nav-item dropdown">
                             <a  class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -110,7 +110,7 @@
             </p>
         </div>
     </footer>
-    <script type="module" th:src="@{build/assets/app.js}" src="build/assets/app.js"></script>
+    <script type="module" th:src="@{/build/assets/app.js}" src="/build/assets/app.js"></script>
 
 </body>
 </html>

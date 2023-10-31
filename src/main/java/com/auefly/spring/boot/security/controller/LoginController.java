@@ -18,10 +18,4 @@ public class LoginController {
     public String login() {
         return "login";
     }
-
-    @PostMapping("/login")
-    public String loginProcess(@RequestParam String email, @RequestParam String password, HttpSession httpSession) {
-        httpSession.setAttribute("user", new User(email, password));
-        return "user";
-    }
 }

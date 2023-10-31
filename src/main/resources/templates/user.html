@@ -1,4 +1,4 @@
-<div th:replace="~{app :: layout(${session.user.getEmail().split('@')[0]}, _, ~{::#main_content})}" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{app :: layout(${session.user.getName()}, _, ~{::#main_content})}" xmlns:th="http://www.thymeleaf.org">
   <div class="container user-center" id="main_content">
     <div class="row">
       <div class="col-lg-3">
@@ -28,10 +28,7 @@
           </div>
           <div class="card-body">
             <p class="item">
-              用户名：<span th:text="${session.user.getEmail().split('@')[0]}">Admin</span>
-            </p>
-            <p class="item">
-              邮&emsp;箱：<span th:text="${session.user.getEmail()}">admin@example.com</span>
+              用户名：<span th:text="${session.user.getName()}">Admin</span>
             </p>
           </div>
         </div>

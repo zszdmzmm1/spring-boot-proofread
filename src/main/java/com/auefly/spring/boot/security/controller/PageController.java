@@ -29,4 +29,9 @@ public class PageController {
     public String adminDashboard() {
         return "backend/dashboard";
     }
+
+    @GetMapping("/admin/empty")
+    public String adminEmpty() {
+        return "backend/dashboard-empty";
+    }
 }

@@ -27,7 +27,7 @@
             <!-- Right navbar links -->
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item dropdown user-menu">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         <img th:src="@{/img/default-avatar.png}" src="/img/default-avatar.png"
                              class="user-image img-circle elevation-2" alt="User Image">
                         <span sec:authentication="name" class="d-none d-md-inline">xx_name</span>
@@ -42,9 +42,11 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <a href="#" class="btn btn-default btn-flat">Profile</a>
-                            <a href="#" class="btn btn-default btn-flat float-right">
+                            <a href="#" th:href="@{/logout}" class="btn btn-default btn-flat float-right"
+                               onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                 退出
                             </a>
+                            <form id="logout-form" th:action="@{/logout}" action="/logout" method="post" style="display: none;"></form>
                         </li>
                     </ul>
                 </li>

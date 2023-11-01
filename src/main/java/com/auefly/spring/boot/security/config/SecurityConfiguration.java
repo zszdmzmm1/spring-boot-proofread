@@ -17,6 +17,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .csrf((csrf) -> csrf.disable())
                 .formLogin(form -> form
                         .loginPage("/login")
                         .usernameParameter("name")

@@ -17,7 +17,8 @@
                                 GitHub
                             </a>
                         </p>
-                        <p class="mt-5 text-center text-muted font-size-12">（备选方案）邮箱、密码登录</p>
+                        <p class="mt-5 text-center text-muted font-size-12">（备选方案）用户名、密码登录</p>
+                        <p class="text-center text-primary" th:if="${param.error}">Invalid username and password.</p>
 
                         <form method="POST" th:action="@{/login}" action="/login">
                             <div class="row mb-2">
@@ -31,7 +32,7 @@
                             </div>
 
                             <div class="row mb-2">
-                                <label for="password" class="col-md-4 col-form-label text-md-end">密码</label>
+                                <label for="password" class="col-md-4 col-form-label text-md-end">密&emsp;码</label>
 
                                 <div class="col-md-6">
                                     <input id="password" type="password" class="form-control " name="password" required

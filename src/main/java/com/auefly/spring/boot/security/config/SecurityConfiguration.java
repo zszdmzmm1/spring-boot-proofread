@@ -17,6 +17,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                //look at this
                 .csrf((csrf) -> csrf.disable())
                 .formLogin(form -> form
                         .loginPage("/login")
@@ -28,6 +29,9 @@ public class SecurityConfiguration {
                         .logoutUrl("/logout")
                         .deleteCookies("JSESSIONID")
                         .logoutSuccessUrl("/")
+                )
+                .rememberMe(rm -> rm
+                        .rememberMeParameter("remember")
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/", "/login", "/user", "/build/**", "/vendor/**", "/img/**").permitAll()

@@ -29,6 +29,9 @@ public class SecurityConfiguration {
                         .deleteCookies("JSESSIONID")
                         .logoutSuccessUrl("/")
                 )
+                .rememberMe(rm -> rm
+                        .rememberMeParameter("remember")
+                )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/", "/login", "/user", "/build/**", "/vendor/**", "/img/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyRole("admin")

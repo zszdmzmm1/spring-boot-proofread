@@ -14,9 +14,10 @@ public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String permissionUrl;
+    private String name;
+    private String description;
 
-    public Permission(String permissionUrl) {
-        this.permissionUrl = permissionUrl;
+    public Permission(String name) {
+        this.name = name;
     }
 }

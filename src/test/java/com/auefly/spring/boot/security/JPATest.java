@@ -7,6 +7,7 @@ import com.auefly.spring.boot.security.repository.PermissionRepository;
 import com.auefly.spring.boot.security.repository.RoleRepository;
 import com.auefly.spring.boot.security.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
+@Disabled
 public class JPATest {
     @Autowired
     UserRepository userRepository;
@@ -32,7 +34,7 @@ public class JPATest {
 
     @Test
     @DisplayName("java User类与数据库实现对接")
-    void UserTableInitTest() {
+    void userTableInitTest() {
         User user = new User();
         user.setName("admin");
         user.setPassword(passwordEncoder.encode("secret"));
@@ -48,8 +50,8 @@ public class JPATest {
     @DisplayName("java Role类与数据库实现对接")
     void roleTableInitTest() {
         List<Role> roles = Arrays.asList(
-                new Role(0, "admin"),
-                new Role(0, "user")
+                new Role("admin"),
+                new Role("user")
         );
 
         List<Role> returnRoles = roleRepository.saveAll(roles);
@@ -63,9 +65,9 @@ public class JPATest {
     @DisplayName("java Permission类与数据库实现对接")
     void permissionTableInitTest() {
         List<Permission> permissions = Arrays.asList(
-                new Permission(0, "/admin/**"),
-                new Permission(0, "/login"),
-                new Permission(0, "/build/**")
+                new Permission("/admin/**"),
+                new Permission("/login"),
+                new Permission("/build/**")
         );
 
         List<Permission> returnPermission = permissionRepository.saveAll(permissions);

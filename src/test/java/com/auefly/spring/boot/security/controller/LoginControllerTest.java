@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -44,6 +45,34 @@ class LoginControllerTest {
                         .param("remember", "on")
                 )
                 .andExpect(MockMvcResultMatchers.cookie().exists("remember-me"))
+        ;
+    }
+
+    @Test
+    @DisplayName("用户无邮箱登录失败跳转")
+    void loginByNameExpectFail() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", "user")
+                        .param("password", "password")
+                )
+                .andExpect(SecurityMockMvcResultMatchers.unauthenticated())
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/login?error"))
+        ;
+    }
+
+    @Test
+    @DisplayName("用户用邮箱登录成功")
+    void loginByEmail() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/login")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("email", "user@example.com")
+                        .param("password", "password")
+                )
+                .andExpect(SecurityMockMvcResultMatchers.authenticated())
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
         ;
     }
 }

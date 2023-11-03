@@ -36,9 +36,9 @@ public class SecurityConfiguration {
                         .rememberMeParameter("remember")
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/", "/login", "/user", "/build/**", "/vendor/**", "/img/**").permitAll()
+                        //.requestMatchers("/", "/login", "/user", "/build/**", "/vendor/**", "/img/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyRole("admin")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
         ;
         return httpSecurity.build();

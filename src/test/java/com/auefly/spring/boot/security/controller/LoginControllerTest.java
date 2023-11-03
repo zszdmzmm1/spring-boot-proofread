@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -73,6 +74,15 @@ class LoginControllerTest {
                 .andExpect(SecurityMockMvcResultMatchers.authenticated())
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
+        ;
+    }
+
+    @Test
+    @WithMockUser(roles = "visitor")
+    @DisplayName("非user, 和admin的身份无法访问该页面")
+    void userPageTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/dashboard"))
+                .andExpect(MockMvcResultMatchers.status().is(403))
         ;
     }
 }

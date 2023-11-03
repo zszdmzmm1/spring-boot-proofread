@@ -14,4 +14,9 @@ public class LoginController {
     public String login() {
         return "login";
     }
+
+    @GetMapping("/users/dashboard")
+    public String users() {
+        return "user";
+    }
 }

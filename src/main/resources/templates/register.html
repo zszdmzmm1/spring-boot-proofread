@@ -1,0 +1,51 @@
+<div th:replace="~{app :: layout(注册, _, ~{::#main_content}) }" xmlns:th="http://www.thymeleaf.org">
+  <div class="container" id="main_content">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">注册</div>
+
+          <div class="card-body">
+            <form method="POST" action="/register" th:action="@{/register}" th:object="${user}">
+              <div class="form-group row">
+                <label for="name" class="col-md-4 col-form-label text-md-end">用户名</label>
+
+                <div class="col-md-6">
+                  <input id="name" type="text" class="form-control " name="name" required autocomplete="text" th:field="*{name}" th:class="|form-control ${#fields.hasErrors('name') ? 'is-invalid' : ''}|">
+                  <span th:if="${#fields.hasErrors('name')}" class="invalid-feedback" role="alert"><strong th:errors = "*{name}"></strong></span>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="email" class="col-md-4 col-form-label text-md-end">邮箱</label>
+
+                <div class="col-md-6">
+                  <input id="email" type="email" class="form-control " name="email" required autocomplete="email" th:field="*{email}" th:class="|form-control ${#fields.hasErrors('email') ? 'is-invalid' : ''}|">
+                  <span th:if="${#fields.hasErrors('email')}" class="invalid-feedback" role="alert"><strong th:errors = "*{email}"></strong></span>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="password"  class="col-md-4 col-form-label text-md-end">密码</label>
+
+                <div class="col-md-6">
+                  <input id="password" type="password" class="form-control " name="password" required autocomplete="password" value="" th:class="|form-control ${#fields.hasErrors('password') ? 'is-invalid' : ''}|">
+                  <span th:if="${#fields.hasErrors('password')}" class="invalid-feedback" role="alert"><strong th:errors = "*{password}"></strong></span>
+                </div>
+
+              </div>
+
+              <div class="form-group row mb-0">
+                <div class="col-md-6 offset-md-4">
+                  <button type="submit" class="btn btn-primary">
+                    注册
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

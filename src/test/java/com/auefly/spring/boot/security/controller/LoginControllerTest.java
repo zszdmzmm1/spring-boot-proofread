@@ -78,11 +78,15 @@ class LoginControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "visitor")
-    @DisplayName("非user, 和admin的身份无法访问该页面")
-    void userPageTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/dashboard"))
-                .andExpect(MockMvcResultMatchers.status().is(403))
+    @DisplayName("已存在的邮箱不可注册")
+    void userRegisterWithExistingEmail() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/register")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", "new-name")
+                        .param("email", "admin@example.com")
+                        .param("password", "secret")
+                )
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrorCode("user", "email", "exist"))
         ;
     }
 }

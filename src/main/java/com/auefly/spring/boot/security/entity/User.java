@@ -31,8 +31,8 @@ public class User {
     )
     private List<Role> roleList = new ArrayList<>();
 
-    public User(String name, String password) {
-        this.name = name;
+    public User(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 }

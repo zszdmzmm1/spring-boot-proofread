@@ -3,6 +3,8 @@ package com.auefly.spring.boot.security.controller;
 import com.auefly.spring.boot.security.dto.UserDto;
 import com.auefly.spring.boot.security.entity.User;
 import com.auefly.spring.boot.security.service.UserService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,7 +49,8 @@ public class LoginController {
     @PostMapping("/register")
     public String registration(@Valid @ModelAttribute("user") UserDto userDto,
                                BindingResult result,
-                               Model model){
+                               Model model,
+                               HttpServletRequest httpServletRequest){
         User existingUser = userService.findUserByEmail(userDto.getEmail());
 
         if(existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()){
@@ -60,6 +63,12 @@ public class LoginController {
         }
 
         userService.saveUser(userDto);
+
+        try{
+            httpServletRequest.login(userDto.getEmail(), userDto.getPassword());
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
 
         return "redirect:/users/dashboard";
     }

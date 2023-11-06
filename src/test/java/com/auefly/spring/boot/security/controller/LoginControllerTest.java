@@ -7,11 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.UUID;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -87,6 +88,20 @@ class LoginControllerTest {
                         .param("password", "secret")
                 )
                 .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrorCode("user", "email", "exist"))
+        ;
+    }
+
+    @Test
+    @DisplayName("自动登录")
+    void autoLogin() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/register")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("name", "hjf")
+                        .param("email", UUID.randomUUID().toString().substring(0, 7) + "@example.com")
+                        .param("password", "123456")
+                )
+                .andExpect(SecurityMockMvcResultMatchers.authenticated())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/users/dashboard"))
         ;
     }
 }

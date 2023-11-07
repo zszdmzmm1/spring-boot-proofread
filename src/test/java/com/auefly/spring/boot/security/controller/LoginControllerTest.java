@@ -1,5 +1,9 @@
 package com.auefly.spring.boot.security.controller;
 
+import com.auefly.spring.boot.security.entity.PasswordResetToken;
+import com.auefly.spring.boot.security.entity.User;
+import com.auefly.spring.boot.security.repository.PasswordResetTokenRepository;
+import com.auefly.spring.boot.security.repository.UserRepository;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @SpringBootTest
@@ -136,6 +141,67 @@ class LoginControllerTest {
                 )
                 .andExpect(MockMvcResultMatchers.model().attribute("error", "密码token不存在。"))
         ;
+    }
+
+
+    @Test
+    @DisplayName("更改新密码时在此输入密码输入不匹配密码")
+    void postResetPasswordWithMismatchConfirmPasswordTest(@Autowired UserRepository userRepository, @Autowired PasswordResetTokenRepository passwordResetTokenRepository) throws Exception {
+        //initialize
+        User user = new User();
+        user.setName(UUID.randomUUID().toString().substring(0, 6));
+        user.setEmail(user.getName() + "@example.com");
+        user.setEnabled(true);
+        userRepository.save(user);
+        PasswordResetToken passwordResetToken = new PasswordResetToken();
+        passwordResetToken.setUser(user);
+        String token = UUID.randomUUID().toString();
+        passwordResetToken.setToken(token);
+        passwordResetToken.setExpirationDate(LocalDateTime.now().plusMinutes(30));
+        passwordResetTokenRepository.save(passwordResetToken);
+
+        //test
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/do-password-reset")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("token", token)
+                .param("password", "new-password")
+                .param("confirmPassword", "psw-mismatch")
+        )
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrorCode("passwordResetDto", "password", "confirm-fail"))
+        ;
+
+        passwordResetTokenRepository.delete(passwordResetToken);
+        userRepository.delete(user);
+    }
+
+    @Test
+    @DisplayName("更改新密码成功")
+    void postResetPasswordSuccessTest(@Autowired UserRepository userRepository, @Autowired PasswordResetTokenRepository passwordResetTokenRepository) throws Exception {
+        //initialize
+        User user = new User();
+        user.setName(UUID.randomUUID().toString().substring(0, 6));
+        user.setEmail(user.getName() + "@example.com");
+        user.setEnabled(true);
+        userRepository.save(user);
+        PasswordResetToken passwordResetToken = new PasswordResetToken();
+        passwordResetToken.setUser(user);
+        String token = UUID.randomUUID().toString();
+        passwordResetToken.setToken(token);
+        passwordResetToken.setExpirationDate(LocalDateTime.now().plusMinutes(30));
+        passwordResetTokenRepository.save(passwordResetToken);
+
+        //test
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/do-password-reset")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("token", token)
+                        .param("password", "new-password")
+                        .param("confirmPassword", "new-password")
+                )
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/login"))
+        ;
+
+        passwordResetTokenRepository.delete(passwordResetToken);
+        userRepository.delete(user);
     }
 
 }

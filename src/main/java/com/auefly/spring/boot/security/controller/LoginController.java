@@ -21,7 +21,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.UnsupportedEncodingException;
@@ -157,8 +160,22 @@ public class LoginController {
     }
 
     @PostMapping("users/do-password-reset")
-    @ResponseBody
-    String postPasswordReset() {
-        return "wip";
+    String postPasswordReset(@Valid @ModelAttribute("passwordResetDto") PasswordResetDto passwordResetDto,
+                             BindingResult result,
+                             RedirectAttributes redirectAttributes) {
+        if (!passwordResetDto.getPassword().equals(passwordResetDto.getConfirmPassword())) {
+            result.rejectValue("password", "confirm-fail", "两次密码不一致！");
+            return "do-password-reset";
+        }
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("passwordResetDto", passwordResetDto);
+            return "redirect:/users/do-password-reset";
+        }
+
+        PasswordResetToken token = passwordResetTokenService.findByToken(passwordResetDto.getToken());
+        User user = token.getUser();
+        user.setPassword(passwordResetDto.getPassword());
+        userService.updatePassword(user);
+        return "redirect:/login";
     }
 }

@@ -12,6 +12,10 @@ spring:
     show-sql: true
     #generate-ddl: true
 
+  mail:
+    host: localhost
+    port: 1025
+
 backend:
   menus:
     - {name: users, url: /admin/users}

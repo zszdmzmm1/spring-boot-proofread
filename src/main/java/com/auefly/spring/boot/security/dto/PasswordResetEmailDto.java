@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
-public class PasswordResetByEmailDto {
+public class PasswordResetEmailDto {
     @NotEmpty(message = "邮箱不可为空！")
     @Email
     private String email;

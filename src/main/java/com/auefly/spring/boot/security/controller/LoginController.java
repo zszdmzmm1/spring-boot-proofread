@@ -1,6 +1,7 @@
 package com.auefly.spring.boot.security.controller;
 
-import com.auefly.spring.boot.security.dto.PasswordResetByEmailDto;
+import com.auefly.spring.boot.security.dto.PasswordResetDto;
+import com.auefly.spring.boot.security.dto.PasswordResetEmailDto;
 import com.auefly.spring.boot.security.dto.UserDto;
 import com.auefly.spring.boot.security.entity.PasswordResetToken;
 import com.auefly.spring.boot.security.entity.User;
@@ -20,10 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.UnsupportedEncodingException;
@@ -95,23 +93,23 @@ public class LoginController {
 
     @GetMapping("/users/password-reset")
     String passwordReset(Model model) {
-        model.addAttribute("resetPassword", new PasswordResetByEmailDto());
+        model.addAttribute("resetPassword", new PasswordResetEmailDto());
         return "password-reset";
     }
 
     @PostMapping("/users/password-reset")
-    String postPasswordReset(@Valid @ModelAttribute("resetPassword") PasswordResetByEmailDto passwordResetByEmailDto,
+    String postPasswordReset(@Valid @ModelAttribute("resetPassword") PasswordResetEmailDto passwordResetEmailDto,
                              BindingResult result,
                              Model model,
                              RedirectAttributes redirectAttributes,
                              HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
-        User existUser = userService.findUserByEmail(passwordResetByEmailDto.getEmail());
+        User existUser = userService.findUserByEmail(passwordResetEmailDto.getEmail());
         if (existUser == null) {
             result.rejectValue("email", "non-existent", "找不到该邮箱！");
         }
 
         if (result.hasErrors()) {
-            model.addAttribute("resetPassword", passwordResetByEmailDto);
+            model.addAttribute("resetPassword", passwordResetEmailDto);
             return "password-reset";
         }
 
@@ -123,11 +121,9 @@ public class LoginController {
         try {
             passwordResetTokenService.save(passwordResetToken);
         } catch (Exception e) {
-            if (e.getMessage().contains("Duplicate entry ")) {
-                result.rejectValue("email", "duplicate-password_reset_token", "请勿短时间内重复发送请求！");
-            } else {
-                result.rejectValue("email", null, "未知错误");
-            }
+            result.rejectValue("email", null, "未知错误");
+            model.addAttribute("passwordResetEmail", passwordResetEmailDto);
+            return "password-reset";
         }
 
         MimeMessage message = sender.createMimeMessage();
@@ -146,8 +142,23 @@ public class LoginController {
     }
 
     @GetMapping("users/do-password-reset")
+    String getPasswordReset(Model model,
+                            @RequestParam(required = false) String token) {
+        PasswordResetToken pswToken = passwordResetTokenService.findByTokenOrderByIdDesc(token);
+        if (pswToken == null) {
+            model.addAttribute("error", "密码token不存在。");
+        } else if (pswToken.getExpirationDate().isBefore(LocalDateTime.now())) {
+            model.addAttribute("error", "密码token已过期。");
+        }
+        PasswordResetDto passwordResetDto = new PasswordResetDto();
+        passwordResetDto.setToken(token);
+        model.addAttribute("passwordResetDto", passwordResetDto);
+        return "do-password-reset";
+    }
+
+    @PostMapping("users/do-password-reset")
     @ResponseBody
-    String passwordReset() {
+    String postPasswordReset() {
         return "wip";
     }
 }

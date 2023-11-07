@@ -126,4 +126,16 @@ class LoginControllerTest {
                 .andExpect(MockMvcResultMatchers.content().string(StringContains.containsString("找不到该邮箱！")))
         ;
     }
+
+    @Test
+    @DisplayName("token错误。")
+    void doPasswordResetTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/do-password-reset")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("token", "jfasjfasihgieshgiahgig")
+                )
+                .andExpect(MockMvcResultMatchers.model().attribute("error", "密码token不存在。"))
+        ;
+    }
+
 }

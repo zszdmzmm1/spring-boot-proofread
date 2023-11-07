@@ -1,6 +1,7 @@
 package com.auefly.spring.boot.security.controller;
 
 import org.hamcrest.Matchers;
+import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,27 @@ class LoginControllerTest {
                 )
                 .andExpect(SecurityMockMvcResultMatchers.authenticated())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/users/dashboard"))
+        ;
+    }
+
+    @Test
+    @DisplayName("修改密码请求发送成功(邮箱存在)")
+    void passwordChangingRequestSuccess() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/password-reset")
+                .param("email", "admin@example.com")
+        )
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/users/password-reset"))
+                .andExpect(MockMvcResultMatchers.flash().attribute("success", "密码重置邮件已发送，请注意查收"))
+        ;
+    }
+
+    @Test
+    @DisplayName("修改密码请求发送成功(邮箱不存在)")
+    void passwordChangingRequestFail() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/password-reset")
+                        .param("email", "not-exist@example.com")
+                )
+                .andExpect(MockMvcResultMatchers.content().string(StringContains.containsString("找不到该邮箱！")))
         ;
     }
 }

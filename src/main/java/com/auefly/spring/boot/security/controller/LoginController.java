@@ -176,6 +176,9 @@ public class LoginController {
         User user = token.getUser();
         user.setPassword(passwordResetDto.getPassword());
         userService.updatePassword(user);
+
+        passwordResetTokenService.expireThisToken(passwordResetDto.getToken());
+
         return "redirect:/login";
     }
 }

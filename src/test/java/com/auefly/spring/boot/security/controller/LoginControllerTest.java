@@ -204,4 +204,42 @@ class LoginControllerTest {
         userRepository.delete(user);
     }
 
+
+    @Test
+    @DisplayName("更改新密后token失效")
+    void expiredTokenTest(@Autowired UserRepository userRepository, @Autowired PasswordResetTokenRepository passwordResetTokenRepository) throws Exception {
+        //initialize
+        User user = new User();
+        user.setName(UUID.randomUUID().toString().substring(0, 6));
+        user.setEmail(user.getName() + "@example.com");
+        user.setEnabled(true);
+        userRepository.save(user);
+        PasswordResetToken passwordResetToken = new PasswordResetToken();
+        passwordResetToken.setUser(user);
+        String token = UUID.randomUUID().toString();
+        passwordResetToken.setToken(token);
+        passwordResetToken.setExpirationDate(LocalDateTime.now().plusMinutes(30));
+        passwordResetTokenRepository.save(passwordResetToken);
+
+        //test
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/do-password-reset")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("token", token)
+                        .param("password", "new-password")
+                        .param("confirmPassword", "new-password")
+                )
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/login"))
+        ;
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/do-password-reset")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("token", token)
+                )
+                .andExpect(MockMvcResultMatchers.model().attribute("error", "密码token已过期。"))
+        ;
+
+        passwordResetTokenRepository.delete(passwordResetToken);
+        userRepository.delete(user);
+    }
+
 }

@@ -163,13 +163,9 @@ public class LoginController {
     String postPasswordReset(@Valid @ModelAttribute("passwordResetDto") PasswordResetDto passwordResetDto,
                              BindingResult result,
                              RedirectAttributes redirectAttributes) {
-        if (!passwordResetDto.getPassword().equals(passwordResetDto.getConfirmPassword())) {
-            result.rejectValue("password", "confirm-fail", "两次密码不一致！");
-            return "do-password-reset";
-        }
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("passwordResetDto", passwordResetDto);
-            return "redirect:/users/do-password-reset";
+            return "do-password-reset";
         }
 
         PasswordResetToken token = passwordResetTokenService.findByToken(passwordResetDto.getToken());

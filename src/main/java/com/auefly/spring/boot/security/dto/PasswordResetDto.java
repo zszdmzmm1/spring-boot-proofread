@@ -1,11 +1,17 @@
 package com.auefly.spring.boot.security.dto;
 
+import com.auefly.spring.boot.security.validator.PasswordConfirmation;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 
 @Data
+@PasswordConfirmation(
+        password = "password",
+        confirmPassword = "confirmPassword",
+        message = "两次密码输入不一致"
+)
 public class PasswordResetDto {
     @NotEmpty
     private String token;

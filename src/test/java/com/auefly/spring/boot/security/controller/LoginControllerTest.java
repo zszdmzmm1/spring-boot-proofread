@@ -167,7 +167,7 @@ class LoginControllerTest {
                 .param("password", "new-password")
                 .param("confirmPassword", "psw-mismatch")
         )
-                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrorCode("passwordResetDto", "password", "confirm-fail"))
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrorCode("passwordResetDto", "confirmPassword", "PasswordConfirmation"))
         ;
 
         passwordResetTokenRepository.delete(passwordResetToken);

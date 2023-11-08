@@ -32,7 +32,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Controller
-public class LoginController {
+public class UserController {
     @Autowired
     UserService userService;
 
@@ -45,26 +45,16 @@ public class LoginController {
     @Autowired
     private JavaMailSenderImpl sender;
 
-    @GetMapping("/")
-    String index() {
-        return "index";
-    }
-
-    @GetMapping("/login")
-    String login() {
-        return "login";
-    }
-
     @GetMapping("/users/dashboard")
     @PreAuthorize("isAuthenticated()")
     String users() {
-        return "user";
+        return "user/dashboard";
     }
 
     @GetMapping("/register")
     String register(Model model) {
         model.addAttribute("user", new UserDto());
-        return "register";
+        return "user/register";
     }
 
     @PostMapping("/register")
@@ -80,7 +70,7 @@ public class LoginController {
 
         if (result.hasErrors()) {
             model.addAttribute("user", userDto);
-            return "register";
+            return "user/register";
         }
 
         userService.saveUser(userDto);
@@ -97,7 +87,7 @@ public class LoginController {
     @GetMapping("/users/password-reset")
     String passwordReset(Model model) {
         model.addAttribute("resetPassword", new PasswordResetEmailDto());
-        return "password-reset";
+        return "user/password-reset";
     }
 
     @PostMapping("/users/password-reset")
@@ -113,7 +103,7 @@ public class LoginController {
 
         if (result.hasErrors()) {
             model.addAttribute("resetPassword", passwordResetEmailDto);
-            return "password-reset";
+            return "user/password-reset";
         }
 
         PasswordResetToken passwordResetToken = new PasswordResetToken();
@@ -126,7 +116,7 @@ public class LoginController {
         } catch (Exception e) {
             result.rejectValue("email", null, "未知错误");
             model.addAttribute("passwordResetEmail", passwordResetEmailDto);
-            return "password-reset";
+            return "user/password-reset";
         }
 
         MimeMessage message = sender.createMimeMessage();
@@ -156,7 +146,7 @@ public class LoginController {
         PasswordResetDto passwordResetDto = new PasswordResetDto();
         passwordResetDto.setToken(token);
         model.addAttribute("passwordResetDto", passwordResetDto);
-        return "do-password-reset";
+        return "user/do-password-reset";
     }
 
     @PostMapping("users/do-password-reset")
@@ -165,7 +155,7 @@ public class LoginController {
                              RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("passwordResetDto", passwordResetDto);
-            return "do-password-reset";
+            return "user/do-password-reset";
         }
 
         PasswordResetToken token = passwordResetTokenService.findByToken(passwordResetDto.getToken());

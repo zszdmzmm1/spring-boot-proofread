@@ -21,7 +21,7 @@ class UserControllerTest {
     @DisplayName("用户管理页面存在page attribute")
     void usersListTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/users"))
-                .andExpect(MockMvcResultMatchers.view().name("backend/dashboard-users"))
+                .andExpect(MockMvcResultMatchers.view().name("backend/user/index"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("page"))
         ;
     }

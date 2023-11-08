@@ -1,4 +1,4 @@
-package com.auefly.spring.boot.security.config;
+package com.auefly.spring.boot.security.bean.backend;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

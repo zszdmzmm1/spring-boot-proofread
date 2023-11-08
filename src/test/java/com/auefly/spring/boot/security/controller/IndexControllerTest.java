@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class LoginControllerTest {
+class IndexControllerTest {
     @Autowired
     MockMvc mockMvc;
 

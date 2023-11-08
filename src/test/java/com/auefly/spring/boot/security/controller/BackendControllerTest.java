@@ -1,6 +1,6 @@
 package com.auefly.spring.boot.security.controller;
 
-import com.auefly.spring.boot.security.config.BackendProperties;
+import com.auefly.spring.boot.security.bean.backend.BackendProperties;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

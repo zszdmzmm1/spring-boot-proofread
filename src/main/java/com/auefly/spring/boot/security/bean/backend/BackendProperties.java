@@ -9,5 +9,4 @@ import java.util.List;
 @ConfigurationProperties(prefix = "backend")
 public class BackendProperties {
     private List<Menus> menus;
-    private String name;
 }

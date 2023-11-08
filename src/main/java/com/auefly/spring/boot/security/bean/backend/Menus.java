@@ -6,4 +6,5 @@ import lombok.Data;
 public class Menus {
     private String name;
     private String url;
+    private String icon;
 }

@@ -8,14 +8,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/admin/collections")
 public class CollectionController {
     @Autowired
     CollectionService collectionService;
 
-    @GetMapping("/admin/collections")
+    @GetMapping("")
     String adminUsers(@RequestParam Optional<Integer> page,
                       @RequestParam Optional<Integer> size,
                       Model model) {
@@ -24,9 +26,16 @@ public class CollectionController {
         return "backend/collection/index";
     }
 
-    @DeleteMapping("/admin/collections/destroy/{id}")
+    @DeleteMapping("/destroy/{id}")
     String destroy(@PathVariable Long id) {
         collectionService.destroy(id);
         return "redirect:/admin/collections";
+    }
+
+    @DeleteMapping("/destroy")
+    @ResponseBody
+    String destroyBatch(@RequestParam(value = "ids[]")List<Long> ids) {
+        collectionService.destroyAllByIds(ids);
+        return "DONE";
     }
 }

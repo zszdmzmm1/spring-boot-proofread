@@ -1,4 +1,4 @@
-<div th:replace="~{/backend/app :: layout(admin-collections, _, ~{::#main_card}, _)}" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{/backend/app :: layout(admin-collections, _, ~{::#main_card}, ~{::#js})}" xmlns:th="http://www.thymeleaf.org">
     <section class="content" id="main_card">
         <div class="card">
             <div class="card-body table-responsive p-0">
@@ -50,4 +50,50 @@
         </div>
         <div th:replace="~{fragment :: #pagination-container}"></div>
     </section>
+
+    <script id="js">
+        function toggle_checkbox() {
+            if ($("#toggle_checkbox").prop('checked')) {
+                $(".delete_checkbox").prop("checked", true);
+            } else {
+                $(".delete_checkbox").prop("checked", false);
+            }
+        }
+
+        function batch_delete() {
+            let ids = $('.delete_checkbox:checked').map(function () {
+                return $(this).val();
+            }).get();
+            if (ids.length > 0) {
+                do_delete(ids);
+            } else {
+                alert('Please select which records you want to delete');
+            }
+        }
+
+        function do_delete(ids) {
+            if (confirm('确定要删除以下文件？ (id=' + ids + ')')) {
+                $.ajax({
+                    url: '/admin/collections/destroy',
+                    data: {
+                        ids: ids
+                    },
+                    type: "DELETE",
+                })
+                    .done(function (response) {
+                        if ('DONE' === response) {
+                            location.href = '/admin/collections';
+                        } else {
+                            console.log(response);
+                            alert(response);
+                        }
+                    })
+                    .fail(function (xhr, status, errorThrown) {
+                        alert("Sorry, there was a problem!");
+                        console.log("Error: " + errorThrown);
+                        console.log("Status: " + status);
+                    })
+            }
+        }
+    </script>
 </div>

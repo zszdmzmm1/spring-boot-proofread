@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -20,6 +21,9 @@ import java.util.UUID;
 import static org.springframework.web.servlet.function.RequestPredicates.param;
 
 public class CollectionControllerTest extends WithMockUserForAdminBaseTest {
+    @Autowired
+    CollectionRepository collectionRepository;
+
     @Test
     @DisplayName("collections")
     void index() throws Exception {
@@ -51,7 +55,7 @@ public class CollectionControllerTest extends WithMockUserForAdminBaseTest {
 
     @Test
     @DisplayName("批量删除文件")
-    void batchDelete(@Autowired CollectionRepository collectionRepository) throws Exception {
+    void batchDelete() throws Exception {
         List<Long> ids = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             Collection collection = new Collection();
@@ -78,5 +82,27 @@ public class CollectionControllerTest extends WithMockUserForAdminBaseTest {
             Optional<Collection> byId = collectionRepository.findById(Long.valueOf(ids.get(i).toString()));
             Assertions.assertTrue(byId.isEmpty());
         }
+    }
+
+    @Test
+    @DisplayName("新建文件")
+    void create() throws Exception {
+        String title = UUID.randomUUID().toString();
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/collections")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("title", title)
+                .param("slug", title + UUID.randomUUID())
+                .param("content", UUID.randomUUID().toString())
+                .param("description", UUID.randomUUID().toString())
+                .param("type", "doc")
+                .param("user_id", "1")
+        )
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/collections"));
+
+        Optional<Collection> co = collectionRepository.findFirstByTitle(title);
+        Assertions.assertTrue(co.isPresent());
+
+        collectionRepository.delete(co.get());
+
     }
 }

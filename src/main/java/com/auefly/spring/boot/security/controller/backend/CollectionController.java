@@ -1,11 +1,14 @@
 package com.auefly.spring.boot.security.controller.backend;
 
+import com.auefly.spring.boot.security.dto.CollectionDto;
 import com.auefly.spring.boot.security.entity.Collection;
 import com.auefly.spring.boot.security.service.CollectionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,5 +40,21 @@ public class CollectionController {
     String destroyBatch(@RequestParam(value = "ids[]")List<Long> ids) {
         collectionService.destroyAllByIds(ids);
         return "DONE";
+    }
+
+    @GetMapping("create")
+    String create(Model model) {
+        model.addAttribute("collection", new Collection());
+        return "backend/collection/create";
+    }
+
+    @PostMapping("")
+    String store(@Valid @ModelAttribute("collection") CollectionDto collectionDto,
+                 BindingResult bindingResul) {
+        if(bindingResul.hasErrors()) {
+            return "backend/collection/create";
+        }
+        collectionService.save(collectionDto);
+        return "redirect:/admin/collections";
     }
 }

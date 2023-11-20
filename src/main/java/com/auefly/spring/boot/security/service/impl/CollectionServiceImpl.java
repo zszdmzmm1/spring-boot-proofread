@@ -1,6 +1,8 @@
 package com.auefly.spring.boot.security.service.impl;
 
+import com.auefly.spring.boot.security.dto.CollectionDto;
 import com.auefly.spring.boot.security.entity.Collection;
+import com.auefly.spring.boot.security.entity.User;
 import com.auefly.spring.boot.security.repository.CollectionRepository;
 import com.auefly.spring.boot.security.service.CollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -31,6 +34,20 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public void destroyAllByIds(List<Long> ids) {
         repository.deleteAllById(ids);
+    }
+
+    @Override
+    public void save(CollectionDto collectionDto) {
+        Collection collection = new Collection();
+        collection.setTitle(collectionDto.getTitle());
+        collection.setSlug(collectionDto.getSlug());
+        collection.setType(collectionDto.getType());
+        collection.setDescription(collectionDto.getDescription());
+        collection.setPublished(collectionDto.isPublished());
+        collection.setCover(collectionDto.getCover());
+        collection.setUser(new User(collectionDto.getUser_id()));
+        collection.setCreatedAt(LocalDateTime.now());
+        repository.save(collection);
     }
 }
 

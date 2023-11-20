@@ -20,5 +20,10 @@ public class CollectionServiceImpl implements CollectionService {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by("id").descending());
         return repository.findAll(pageable);
     }
+
+    @Override
+    public void destroy(Long id) {
+        repository.deleteById(id);
+    }
 }
 

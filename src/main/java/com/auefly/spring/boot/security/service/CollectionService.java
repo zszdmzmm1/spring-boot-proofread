@@ -7,4 +7,5 @@ public interface CollectionService {
 
     Page<Collection> findAll(int pageNumber, int pageSize);
 
+    void destroy(Long id);
 }

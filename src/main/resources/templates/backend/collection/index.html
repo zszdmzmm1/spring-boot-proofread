@@ -32,10 +32,10 @@
                                     Edit
                                 </a>
                                 <a class="text-sm pl-3" href="#"
-                                   th:onclick="|event.preventDefault(); if(confirm('Are you sure you want to Remove?')) document.getElementById('destroy-form-${collection.id}').submit();|">
+                                   th:onclick="|event.preventDefault(); if(confirm('是否删除该文件？')) document.getElementById('destroy-form-${collection.id}').submit();|">
                                     <i class="fas fa-trash"></i>
                                     Remove
-                                    <form th:id="${'destroy-form-' + collection.id}" action="#" th:method="delete" style="display: none;">
+                                    <form th:id="${'destroy-form-' + collection.id}" th:method="delete" th:action="@{|/admin/collections/destroy/${collection.id}|}" style="display: none;">
                                     </form>
                                 </a>
                             </td>

@@ -23,6 +23,10 @@ public class User {
     private LocalDateTime createdAt;
     private boolean enabled;
 
+    public User(Long id) {
+        this.id = id;
+    }
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",

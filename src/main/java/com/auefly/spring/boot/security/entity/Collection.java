@@ -2,6 +2,7 @@ package com.auefly.spring.boot.security.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.util.List;
 @Entity
 public class Collection {
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     private String title;
@@ -38,4 +40,12 @@ public class Collection {
     private String seoDescription;
     private boolean completed;
     private boolean proofread;
+
+
+    @ManyToOne(
+            targetEntity = User.class,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    User user;
 }

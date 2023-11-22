@@ -5,54 +5,117 @@
     <title>form</title>
 </head>
 <body>
-    <form id="collection-form" method="post" action="#" th:action="@{/admin/collections}" enctype="multipart/form-data" th:object="${collection}">
-        <div class="card-body">
-            <input type="hidden" name="id" th:value="*{id}">
-            <input type="hidden" name="user_id" th:value="${#authentication.principal.user.id}">
+    <div class="card-body" id="collection-form">
+        <input type="hidden" name="id" th:value="*{id}">
+        <input type="hidden" name="user_id" th:value="${#authentication.principal.user.id}">
 
-            <div class="form-group">
-                <label for="title">标题</label>
-                <input th:field="*{title}" type="text" class="form-control" th:class="|form-control ${#fields.hasErrors('title') ? 'is-invalid' : ''}|" name="title" id="title" placeholder="标题" required>
-                <span th:if="${#fields.hasErrors('title')}" id="title-error" class="error invalid-feedback" th:errors="*{title}"></span>
+        <div class="form-group">
+            <label for="title">标题</label>
+            <input th:field="*{title}" type="text" class="form-control"
+                   th:class="|form-control ${#fields.hasErrors('title') ? 'is-invalid' : ''}|" name="title" id="title"
+                   placeholder="标题" required>
+            <span th:if="${#fields.hasErrors('title')}" id="title-error" class="error invalid-feedback"
+                  th:errors="*{title}"></span>
+        </div>
+        <div class="form-group">
+            <label for="slug">Slug</label>
+            <input th:field="*{slug}" type="text" class="form-control"
+                   th:class="|form-control ${#fields.hasErrors('slug') ? 'is-invalid' : ''}|" name="slug" id="slug"
+                   placeholder="slug">
+            <span th:if="${#fields.hasErrors('slug')}" id="slug-error" class="error invalid-feedback"
+                  th:errors="*{slug}"></span>
+        </div>
+        <div class="form-group">
+            <label for="type-select">类型</label>
+            <select th:field="*{type}" class="form-control"
+                    th:class="|form-control ${#fields.hasErrors('type') ? 'is-invalid' : ''}|" id="type-select"
+                    name="type">
+                <option value="doc">文集</option>
+                <option value="video">视频</option>
+            </select>
+            <span th:if="${#fields.hasErrors('type')}" id="type-error" class="error invalid-feedback"
+                  th:errors="*{type}"></span>
+        </div>
+        <div class="form-group">
+            <label for="description">描述</label>
+            <div id="description">
+                <textarea th:field="*{description}" name="description" class="form-control" rows="2"></textarea>
             </div>
-            <div class="form-group">
-                <label for="slug">Slug</label>
-                <input th:field="*{slug}" type="text" class="form-control" th:class="|form-control ${#fields.hasErrors('slug') ? 'is-invalid' : ''}|" name="slug" id="slug" placeholder="slug">
-                <span th:if="${#fields.hasErrors('slug')}" id="slug-error" class="error invalid-feedback" th:errors="*{slug}"></span>
+        </div>
+        <div class="form-group">
+            <label for="published-select">状态</label>
+            <select th:field="*{published}" class="form-control" id="published-select" name="published">
+                <option value="1">发布</option>
+                <option value="0">草稿</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="cover">封面图片</label>
+            <div>
+                <input type="file" name="coverFile" id="cover" class="d-block">
+                <input th:field="*{cover}" type="hidden" name="cover">
+                <img th:if="!${#strings.isEmpty(collection.cover)}" th:src="*{cover}" width="200"
+                     class="img-fluid blog-post-cover mt-2" alt="collection-cover">
             </div>
-            <div class="form-group">
-                <label for="type-select">类型</label>
-                <select th:field="*{type}" class="form-control" th:class="|form-control ${#fields.hasErrors('type') ? 'is-invalid' : ''}|" id="type-select" name="type">
-                    <option value="doc">文集</option>
-                    <option value="video">视频</option>
-                </select>
-                <span th:if="${#fields.hasErrors('type')}" id="type-error" class="error invalid-feedback" th:errors="*{type}"></span>
-            </div>
-            <div class="form-group">
-                <label for="description">描述</label>
-                <div id="description">
-                    <textarea th:field="*{description}" name="description" class="form-control" rows="2"></textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="published-select">状态</label>
-                <select th:field="*{published}" class="form-control" id="published-select" name="published">
-                    <option value="1">发布</option>
-                    <option value="0">草稿</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="cover">封面图片</label>
-                <div>
-                    <input type="file" name="coverFile" id="cover" class="d-block">
-                    <input th:field="*{cover}" type="hidden" name="cover">
-                    <img th:if="!${#strings.isEmpty(collection.cover)}" th:src="*{cover}" width="200" class="img-fluid blog-post-cover mt-2" alt="collection-cover">
+        </div>
+    </div>
+
+
+    <div class="card" id="syllabus">
+        <div class="card-header">
+            <h3 class="card-title">Collection Syllabus</h3>
+        </div>
+        <div class="card-body">
+            <div class="syllabus">
+                <ol class="sortable text-muted">
+                    <li class="section-item shadow-sm">
+                        <i class="fa fa-folder"></i>
+                        <span>section.title</span>
+                        <span class="section-actions small pl-2">
+                                <a href="#"><i class="fa fa-edit"></i></a>
+                                <a href="#">
+                                    <i class="fa fa-trash-alt"></i>
+                                </a>
+                            </span>
+                        <ol>
+                            <li class="lecture-item">
+                                <i class="fa fa-file-alt"></i>
+                                <span>lecture.title</span>
+                                <span class="lecture-actions small pl-2">
+                                            <a href="#"><i class="fa fa-edit"></i></a>
+                                            <a href="#">
+                                                <i class="fa fa-trash-alt"></i>
+                                            </a>
+                                        </span>
+                            </li>
+                        </ol>
+                        <div class="lecture-plus small">
+                            <a href="#"><i class="fa fa-plus lecture-plus-icon"></i>Add New Lecture</a>
+                        </div>
+                    </li>
+                </ol>
+                <div class="section-plus small">
+                    <a href="#"><i class="fa fa-plus section-plus-icon"></i>Add New Section</a>
                 </div>
             </div>
         </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary">保存</button>
-        </div>
-    </form>
+    </div>
+
+
+    <div id="js_content">
+        <script src="/vendor/jquery-sortable/jquery-sortable-min.js"></script>
+        <script>
+            $(function() {
+                $("ol.sortable").sortable();
+                $('ol.sortable li.section-item').hover(function(){
+                    $(this).find('span.section-actions').toggle();
+                })
+                $('ol.sortable li.lecture-item').hover(function(){
+                    $(this).find('span.lecture-actions').toggle();
+                })
+            });
+        </script>
+    </div>
+
 </body>
 </html>

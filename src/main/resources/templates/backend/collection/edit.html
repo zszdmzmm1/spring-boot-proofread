@@ -2,11 +2,22 @@
   <section class="content" id="main_card">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-12">
+        <div class="col-lg-8 col-12">
           <div class="card">
-            <div th:replace="~{backend/collection/_fragment :: #collection-form}"></div>
+            <div class="card-header">
+              <h3 class="card-title">Course Basic Info</h3>
+            </div>
+            <form method="post" action="#" th:action="@{/admin/collections}" enctype="multipart/form-data" th:object="${collection}" class="mb-0">
+              <div th:replace="~{backend/collection/_fragment :: #collection-form}"></div>
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">修改</button>
+              </div>
+            </form>
           </div>
           <!-- /.card -->
+        </div>
+        <div class="col-lg-4 col-12">
+          <div th:replace="~{backend/collection/_fragment :: #syllabus}"></div>
         </div>
       </div>
     </div>

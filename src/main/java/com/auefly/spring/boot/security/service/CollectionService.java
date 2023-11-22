@@ -18,4 +18,6 @@ public interface CollectionService {
     void save(CollectionDto collectionDto);
 
     Optional<Collection> findById(Long id);
+
+    Page<Collection> findAllDocs(int currentPage, int pageSize);
 }

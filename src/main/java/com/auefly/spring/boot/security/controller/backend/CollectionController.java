@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Controller
+@Controller("backendCollectionController")
 @RequestMapping("/admin/collections")
 public class CollectionController {
     @Autowired

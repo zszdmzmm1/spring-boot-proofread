@@ -63,5 +63,11 @@ public class CollectionServiceImpl implements CollectionService {
     public Optional<Collection> findById(Long id) {
         return repository.findById(id);
     }
+
+    @Override
+    public Page<Collection> findAllDocs(int currentPage, int pageSize) {
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("id").descending());
+        return repository.findAllByType("doc", pageable);
+    }
 }
 

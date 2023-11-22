@@ -7,7 +7,7 @@
             <div class="card-header">
               <h3 class="card-title">Course Basic Info</h3>
             </div>
-            <form method="post" action="#" th:action="@{/admin/collections}" enctype="multipart/form-data" th:object="${collection}" class="mb-0">
+            <form th:method="put" action="#" th:action="@{/admin/collections}" enctype="multipart/form-data" th:object="${collection}" class="mb-0">
               <div th:replace="~{backend/collection/_fragment :: #collection-form}"></div>
               <div class="card-footer">
                 <button type="submit" class="btn btn-primary">修改</button>

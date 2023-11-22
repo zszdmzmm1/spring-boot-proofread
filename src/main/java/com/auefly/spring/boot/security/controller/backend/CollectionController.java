@@ -3,6 +3,7 @@ package com.auefly.spring.boot.security.controller.backend;
 import com.auefly.spring.boot.security.dto.CollectionDto;
 import com.auefly.spring.boot.security.entity.Collection;
 import com.auefly.spring.boot.security.service.CollectionService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -112,5 +113,19 @@ public class CollectionController {
         collectionService.save(collectionDto);
 
         return "redirect:/admin/collections";
+    }
+
+    @PostMapping("togglePublished/{id}")
+    @ResponseBody
+    @Transactional
+    public String togglePublished(@PathVariable Long id) {
+        Optional<Collection> optionalCollection = collectionService.findById(id);
+
+        if(optionalCollection.isEmpty() || !"doc".equals(optionalCollection.get().getType())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Doc Not Found");
+        }
+
+        collectionService.togglePublished(id);
+        return "SUCCESS";
     }
 }

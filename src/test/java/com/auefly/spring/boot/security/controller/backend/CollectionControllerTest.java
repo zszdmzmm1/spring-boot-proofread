@@ -111,7 +111,7 @@ public class CollectionControllerTest extends WithMockUserForAdminBaseTest {
 
     @Test
     @DisplayName("下载图片")
-    void storeWithCoverImage(@Autowired CollectionRepository collectionRepository, @Autowired Environment env) throws Exception {
+    void storeWithCoverImage(@Autowired Environment env) throws Exception {
         String title = "title-" + UUID.randomUUID();
         MockMultipartFile coverFile = new MockMultipartFile("coverFile", "cover.png", MediaType.IMAGE_PNG_VALUE, new byte[]{1, 2, 3});
         mockMvc.perform(MockMvcRequestBuilders
@@ -142,7 +142,7 @@ public class CollectionControllerTest extends WithMockUserForAdminBaseTest {
 
     @Test
     @DisplayName("update")
-    void update(@Autowired CollectionRepository collectionRepository) throws Exception {
+    void update() throws Exception {
         String title = UUID.randomUUID().toString();
         Collection collection = new Collection();
         collection.setTitle(title);
@@ -157,13 +157,35 @@ public class CollectionControllerTest extends WithMockUserForAdminBaseTest {
 
         String updateTitle = title + "_update";
         mockMvc.perform(MockMvcRequestBuilders.put("/admin/collections")
-                .param("id", collection.getId().toString())
-                .param("title", updateTitle)
-                .param("slug", collection.getSlug())
-                .param("type", collection.getType())
-                .param("description", collection.getDescription())
-                .param("user_id", collection.getUser().getId().toString())
-        )
+                        .param("id", collection.getId().toString())
+                        .param("title", updateTitle)
+                        .param("slug", collection.getSlug())
+                        .param("type", collection.getType())
+                        .param("description", collection.getDescription())
+                        .param("user_id", collection.getUser().getId().toString())
+                )
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/collections"));
+    }
+
+    @Test
+    @DisplayName("文章上线下线")
+    void togglePublished() throws Exception {
+        boolean isPublished = false;
+        String title = UUID.randomUUID().toString();
+        Collection collection = new Collection();
+        collection.setTitle(title);
+        collection.setSlug(UUID.randomUUID().toString());
+        collection.setType("doc");
+        collection.setUser(new User(1L));
+        collectionRepository.save(collection);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/collections/togglePublished/" + collection.getId()))
+                .andExpect(MockMvcResultMatchers.content().string("SUCCESS"));
+
+        Optional<Collection> optionalCollection = collectionRepository.findById(collection.getId());
+        Assertions.assertTrue(optionalCollection.isPresent());
+        Assertions.assertEquals(optionalCollection.get().isPublished(), !isPublished);
+
+        collectionRepository.delete(optionalCollection.get());
     }
 }

@@ -19,7 +19,7 @@ public interface CollectionService {
 
     Optional<Collection> findById(Long id);
 
-    Page<Collection> findAllDocs(int currentPage, int pageSize);
+    Page<Collection> findAllPublishedDocs(int currentPage, int pageSize);
 
     void togglePublished(Long id);
 }

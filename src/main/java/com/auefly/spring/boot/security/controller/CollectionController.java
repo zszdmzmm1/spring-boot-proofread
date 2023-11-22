@@ -25,7 +25,7 @@ public class CollectionController {
                  @RequestParam("size")Optional<Integer> size) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
-        Page<Collection> pageContent = collectionService.findAllDocs(currentPage, pageSize);
+        Page<Collection> pageContent = collectionService.findAllPublishedDocs(currentPage, pageSize);
         model.addAttribute("page", pageContent);
         return "collection/doc/index";
     }

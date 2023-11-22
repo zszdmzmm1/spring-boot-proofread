@@ -65,9 +65,9 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public Page<Collection> findAllDocs(int currentPage, int pageSize) {
+    public Page<Collection> findAllPublishedDocs(int currentPage, int pageSize) {
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("id").descending());
-        return repository.findAllByType("doc", pageable);
+        return repository.findAllByPublishedIsTrueAndType("doc", pageable);
     }
 
     @Override

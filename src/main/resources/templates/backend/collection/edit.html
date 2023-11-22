@@ -1,0 +1,14 @@
+<div th:replace="~{ backend/app :: layout ('update your Collection', _, ~{::#main_card}, _) }" xmlns:th="http://www.thymeleaf.org">
+  <section class="content" id="main_card">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div th:replace="~{backend/collection/_form :: #collection-form}"></div>
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

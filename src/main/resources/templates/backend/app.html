@@ -81,7 +81,7 @@
                         class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item">
-                            <a th:href="${menu.url}" th:class="${requestURI.equals(menu.url)}?'nav-link active':'nav-link'" class="nav-link ">
+                            <a th:href="${menu.url}" th:class="${requestURI.startsWith(menu.url)}?'nav-link active':'nav-link'" class="nav-link ">
                                 <i th:class="|nav-icon fas fa-${menu.icon}|" class="nav-icon fas fa-square"></i>
                                 <p th:text="${menu.name}"></p>
                             </a>

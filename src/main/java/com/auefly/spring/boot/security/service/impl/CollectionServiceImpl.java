@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CollectionServiceImpl implements CollectionService {
@@ -39,6 +40,14 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public void save(CollectionDto collectionDto) {
         Collection collection = new Collection();
+
+        if (collectionDto.getId() != null) {
+            collection = repository.findById(collectionDto.getId()).get();
+            collection.setUpdatedAt(LocalDateTime.now());
+        } else {
+            collection.setCreatedAt(LocalDateTime.now());
+        }
+
         collection.setTitle(collectionDto.getTitle());
         collection.setSlug(collectionDto.getSlug());
         collection.setType(collectionDto.getType());
@@ -48,6 +57,11 @@ public class CollectionServiceImpl implements CollectionService {
         collection.setUser(new User(collectionDto.getUser_id()));
         collection.setCreatedAt(LocalDateTime.now());
         repository.save(collection);
+    }
+
+    @Override
+    public Optional<Collection> findById(Long id) {
+        return repository.findById(id);
     }
 }
 

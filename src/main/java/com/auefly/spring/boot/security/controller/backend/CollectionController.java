@@ -6,21 +6,17 @@ import com.auefly.spring.boot.security.service.CollectionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,7 +44,7 @@ public class CollectionController {
 
     @DeleteMapping("/destroy")
     @ResponseBody
-    String destroyBatch(@RequestParam(value = "ids[]")List<Long> ids) {
+    String destroyBatch(@RequestParam(value = "ids[]") List<Long> ids) {
         collectionService.destroyAllByIds(ids);
         return "DONE";
     }
@@ -61,9 +57,9 @@ public class CollectionController {
 
     @PostMapping("")
     String store(@RequestParam(value = "coverFile", required = false) MultipartFile file,
-            @Valid @ModelAttribute("collection") CollectionDto collectionDto,
+                 @Valid @ModelAttribute("collection") CollectionDto collectionDto,
                  BindingResult bindingResul) throws IOException {
-        if(bindingResul.hasErrors()) {
+        if (bindingResul.hasErrors()) {
             return "backend/collection/create";
         }
         doCover(file, collectionDto);
@@ -75,6 +71,7 @@ public class CollectionController {
     String uploadBasePath;
     @Value("${custom.upload.collection-cover-dir-under-base-path}")
     String postCoverDirUnderBasePath;
+
     private void doCover(MultipartFile file, CollectionDto collectionDto) throws IOException {
         if (file != null && !file.isEmpty()) {
             File dir = new File(uploadBasePath + File.separator + postCoverDirUnderBasePath);
@@ -88,5 +85,32 @@ public class CollectionController {
             file.transferTo(new File(dir.getAbsolutePath() + File.separator + newFilename));
             collectionDto.setCover("/" + postCoverDirUnderBasePath + File.separator + newFilename);
         }
+    }
+
+    @GetMapping("/edit/{id}")
+    String edit(@PathVariable Long id,
+                Model model) {
+        Optional<Collection> optionalCollection = collectionService.findById(id);
+        if (optionalCollection.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Collection not found");
+        } else {
+            model.addAttribute("collection", optionalCollection.get());
+            return "backend/collection/edit";
+        }
+    }
+
+    @PutMapping("")
+    String update(@Valid @ModelAttribute("collection")CollectionDto collectionDto,
+                  BindingResult bindingResult, Model model,
+                  @RequestParam(value = "coverFile", required = false)MultipartFile file) throws IOException {
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("collection", collectionDto);
+            return "backend/collection/edit";
+        }
+
+        doCover(file, collectionDto);
+        collectionService.save(collectionDto);
+
+        return "redirect:/admin/collections";
     }
 }

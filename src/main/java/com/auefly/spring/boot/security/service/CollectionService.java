@@ -5,6 +5,7 @@ import com.auefly.spring.boot.security.entity.Collection;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CollectionService {
 
@@ -15,4 +16,6 @@ public interface CollectionService {
     void destroyAllByIds(List<Long> ids);
 
     void save(CollectionDto collectionDto);
+
+    Optional<Collection> findById(Long id);
 }

@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.springframework.web.servlet.function.RequestPredicates.param;
-
 public class CollectionControllerTest extends WithMockUserForAdminBaseTest {
     @Autowired
     CollectionRepository collectionRepository;
@@ -82,7 +80,7 @@ public class CollectionControllerTest extends WithMockUserForAdminBaseTest {
                 .andExpect(MockMvcResultMatchers.content().string("DONE"))
         ;
 
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             Optional<Collection> byId = collectionRepository.findById(Long.valueOf(ids.get(i).toString()));
             Assertions.assertTrue(byId.isEmpty());
         }
@@ -93,14 +91,14 @@ public class CollectionControllerTest extends WithMockUserForAdminBaseTest {
     void create() throws Exception {
         String title = UUID.randomUUID().toString();
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/collections")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("title", title)
-                .param("slug", title + UUID.randomUUID())
-                .param("content", UUID.randomUUID().toString())
-                .param("description", UUID.randomUUID().toString())
-                .param("type", "doc")
-                .param("user_id", "1")
-        )
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("title", title)
+                        .param("slug", title + UUID.randomUUID())
+                        .param("content", UUID.randomUUID().toString())
+                        .param("description", UUID.randomUUID().toString())
+                        .param("type", "doc")
+                        .param("user_id", "1")
+                )
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/collections"));
 
         Optional<Collection> co = collectionRepository.findFirstByTitle(title);
@@ -115,7 +113,7 @@ public class CollectionControllerTest extends WithMockUserForAdminBaseTest {
     @DisplayName("下载图片")
     void storeWithCoverImage(@Autowired CollectionRepository collectionRepository, @Autowired Environment env) throws Exception {
         String title = "title-" + UUID.randomUUID();
-        MockMultipartFile coverFile = new MockMultipartFile("coverFile", "cover.png", MediaType.IMAGE_PNG_VALUE, new byte[] { 1, 2, 3 });
+        MockMultipartFile coverFile = new MockMultipartFile("coverFile", "cover.png", MediaType.IMAGE_PNG_VALUE, new byte[]{1, 2, 3});
         mockMvc.perform(MockMvcRequestBuilders
                         .multipart("/admin/collections")
                         //.contentType(MediaType.MULTIPART_FORM_DATA)
@@ -141,4 +139,31 @@ public class CollectionControllerTest extends WithMockUserForAdminBaseTest {
         collectionRepository.delete(co.get());
     }
 
+
+    @Test
+    @DisplayName("update")
+    void update(@Autowired CollectionRepository collectionRepository) throws Exception {
+        String title = UUID.randomUUID().toString();
+        Collection collection = new Collection();
+        collection.setTitle(title);
+        collection.setSlug(UUID.randomUUID().toString());
+        collection.setType("doc");
+        collection.setUser(new User(1L));
+
+        collectionRepository.save(collection);
+
+        Optional<Collection> optionalCollection = collectionRepository.findFirstByTitle(title);
+        Assertions.assertTrue(optionalCollection.isPresent());
+
+        String updateTitle = title + "_update";
+        mockMvc.perform(MockMvcRequestBuilders.put("/admin/collections")
+                .param("id", collection.getId().toString())
+                .param("title", updateTitle)
+                .param("slug", collection.getSlug())
+                .param("type", collection.getType())
+                .param("description", collection.getDescription())
+                .param("user_id", collection.getUser().getId().toString())
+        )
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/collections"));
+    }
 }

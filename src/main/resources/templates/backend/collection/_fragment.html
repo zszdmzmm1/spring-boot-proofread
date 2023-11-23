@@ -78,20 +78,22 @@
                                     <i class="fa fa-trash-alt"></i>
                                 </a>
                             </span>
-                            <ol>
-                                <li class="lecture-item">
-                                    <i class="fa fa-file-alt"></i>
-                                    <span>lecture.title</span>
-                                    <span class="lecture-actions small pl-2">
+                            <ol th:if="${#arrays.length(section.lectures) > 0}">
+                                <th:block th:each="lecture : ${section.lectures}">
+                                    <li class="lecture-item">
+                                        <i class="fa fa-file-alt"></i>
+                                        <span th:text="${lecture.title}">lecture.title</span>
+                                        <span class="lecture-actions small pl-2">
                                             <a href="#"><i class="fa fa-edit"></i></a>
                                             <a href="#">
                                                 <i class="fa fa-trash-alt"></i>
                                             </a>
                                         </span>
-                                </li>
+                                    </li>
+                                </th:block>
                             </ol>
                             <div class="lecture-plus small">
-                                <a href="#" ><i class="fa fa-plus lecture-plus-icon"></i>Add New Lecture</a>
+                                <a href="#" th:href="@{/admin/lectures/create(collection_id=${collection.id}, section_id=${section.id})}"><i class="fa fa-plus lecture-plus-icon"></i>Add New Lecture</a>
                             </div>
                         </li>
                     </th:block>

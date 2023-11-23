@@ -13,6 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @DynamicUpdate
 public class Collection {
     @Id
@@ -45,10 +46,18 @@ public class Collection {
     private boolean proofread;
 
 
+    public Collection(Long id) {
+        this.id = id;
+    }
+
+
     @ManyToOne(
             targetEntity = User.class,
             fetch = FetchType.LAZY
     )
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     User user;
+
+    @OneToMany(mappedBy = "collection", fetch = FetchType.EAGER)
+    private List<Section> sections = new ArrayList<>();
 }

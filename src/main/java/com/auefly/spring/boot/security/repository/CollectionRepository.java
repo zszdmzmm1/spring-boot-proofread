@@ -26,4 +26,6 @@ public interface CollectionRepository extends JpaRepository<Collection, Long> {
             WHERE co.id = :id
             """)
     void togglePublished(Long id);
+
+    Collection findFirstBySlug(String value);
 }

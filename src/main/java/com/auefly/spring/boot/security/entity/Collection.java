@@ -21,6 +21,7 @@ public class Collection {
 
     private String title;
     private String titleTranslation;
+    @Column(unique = true)
     private String slug;
     private String type;
     private String video;

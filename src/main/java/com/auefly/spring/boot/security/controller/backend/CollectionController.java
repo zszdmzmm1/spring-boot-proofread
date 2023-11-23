@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -58,7 +59,7 @@ public class CollectionController {
 
     @PostMapping("")
     String store(@RequestParam(value = "coverFile", required = false) MultipartFile file,
-                 @Valid @ModelAttribute("collection") CollectionDto collectionDto,
+                 @Validated(CollectionDto.OnSave.class) @ModelAttribute("collection") CollectionDto collectionDto,
                  BindingResult bindingResul) throws IOException {
         if (bindingResul.hasErrors()) {
             return "backend/collection/create";
@@ -101,7 +102,7 @@ public class CollectionController {
     }
 
     @PutMapping("")
-    String update(@Valid @ModelAttribute("collection")CollectionDto collectionDto,
+    String update(@Validated(CollectionDto.OnUpdate.class) @ModelAttribute("collection")CollectionDto collectionDto,
                   BindingResult bindingResult, Model model,
                   @RequestParam(value = "coverFile", required = false)MultipartFile file) throws IOException {
         if(bindingResult.hasErrors()) {

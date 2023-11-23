@@ -188,4 +188,48 @@ public class CollectionControllerTest extends WithMockUserForAdminBaseTest {
 
         collectionRepository.delete(optionalCollection.get());
     }
+
+    @Test
+    @DisplayName("自定义slug验证")
+    void storeWithCustomUniqueValidator(@Autowired CollectionRepository collectionRepository) throws Exception {
+        String title = "title-" + UUID.randomUUID();
+        String slug = "slug-" + UUID.randomUUID();
+
+        Collection collection = new Collection();
+        collection.setTitle(title);
+        collection.setSlug(UUID.randomUUID().toString());
+        collection.setType("doc");
+        collection.setSlug(slug);
+        collection.setUser(new User(1L));
+        collectionRepository.save(collection);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/admin/collections")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", "")
+                        .param("title", title)
+                        .param("slug", slug)
+                        .param("type", "doc")
+                        .param("user_id", "1")
+                )
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrorCode("collection", "slug", "CustomUnique"))
+        ;
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/admin/collections")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", collection.getId().toString())
+                        .param("title", title + "--updated")
+                        .param("slug", slug)
+                        .param("type", "doc")
+                        .param("user_id", "1")
+                )
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/collections"))
+        ;
+
+        Optional<Collection> co = collectionRepository.findFirstByTitle(title + "--updated");
+        Assertions.assertTrue(co.isPresent());
+
+        collectionRepository.delete(co.get());
+    }
 }

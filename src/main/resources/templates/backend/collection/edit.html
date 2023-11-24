@@ -1,23 +1,34 @@
 <div th:replace="~{ backend/app :: layout ('update your Collection', _, ~{::#main_card}, _) }" xmlns:th="http://www.thymeleaf.org">
-  <section class="content" id="main_card">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-8 col-12">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Course Basic Info</h3>
-            </div>
-            <form th:method="put" action="#" th:action="@{/admin/collections}" enctype="multipart/form-data" th:object="${collection}" class="mb-0">
-              <div th:replace="~{backend/collection/_fragment :: #collection-form}"></div>
-              <div class="card-footer">
-                <button type="submit" class="btn btn-primary">修改</button>
-              </div>
-            </form>
+  <section class="content-wrapper" id="main_card">
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>编辑Collection</h1>
           </div>
-          <!-- /.card -->
         </div>
-        <div class="col-lg-4 col-12">
-          <div th:replace="~{backend/collection/_fragment :: #syllabus}"></div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-8 col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Course Basic Info</h3>
+              </div>
+              <form th:method="put" action="#" th:action="@{/admin/collections}" enctype="multipart/form-data" th:object="${collection}" class="mb-0">
+                <div th:replace="~{backend/collection/_fragment :: #collection-form}"></div>
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">修改</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+          <div class="col-lg-4 col-12">
+            <div th:replace="~{backend/collection/_fragment :: #syllabus}"></div>
+          </div>
         </div>
       </div>
     </div>

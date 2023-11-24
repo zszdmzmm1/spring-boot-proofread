@@ -1,20 +1,37 @@
 <div th:replace="~{ backend/app :: layout ('Create New Lecture', ~{backend/lecture/_fragment::#css_content}, ~{::#main}, ~{backend/lecture/_fragment::#js_content}) }" xmlns:th="http://www.thymeleaf.org">
   <!-- Main content -->
-    <section class="content" id="main">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <form id="lecture-form" method="post" action="#" th:action="@{/admin/lectures}" enctype="multipart/form-data" th:object="${lecture}" class="mb-0">
-                <input type="hidden" name="section_id" th:value="${param.section_id} ">
-                <input type="hidden" name="collection_id" th:value="${param.collection_id} ">
-                <div th:replace="~{backend/lecture/_fragment :: #lecture-form}"></div>
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">保存</button>
-                </div>
-              </form>
+    <section class="content-wrapper" id="main">
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1>创建新的Lecture</h1>
             </div>
-            <!-- /.card -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+                <li class="breadcrumb-item active">Lectures</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <form id="lecture-form" method="post" action="#" th:action="@{/admin/lectures}" enctype="multipart/form-data" th:object="${lecture}" class="mb-0">
+                  <input type="hidden" name="section_id" th:value="${param.section_id} ">
+                  <input type="hidden" name="collection_id" th:value="${param.collection_id} ">
+                  <div th:replace="~{backend/lecture/_fragment :: #lecture-form}"></div>
+                  <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">保存</button>
+                  </div>
+                </form>
+              </div>
+              <!-- /.card -->
+            </div>
           </div>
         </div>
       </div>

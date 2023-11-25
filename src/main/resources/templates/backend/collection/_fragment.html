@@ -85,8 +85,9 @@
                                         <span th:text="${lecture.title}">lecture.title</span>
                                         <span class="lecture-actions small pl-2">
                                             <a href="#" th:href="@{'/admin/lectures/edit/' + ${lecture.id}(collection_id=${collection.id}, section_id=${section.id})}"><i class="fa fa-edit"></i></a>
-                                            <a href="#">
+                                            <a href="#" th:onclick="|event.preventDefault; if(confirm('你确定要删除吗？')) document.getElementById('destroy-form-${lecture.id}').submit();|">
                                                 <i class="fa fa-trash-alt"></i>
+                                                <form th:id="${'destroy-form-' + lecture.id}" th:action="@{'/admin/lectures/destroy/' + ${lecture.id}}" th:method="delete" style="display: none;"></form>
                                             </a>
                                         </span>
                                     </li>

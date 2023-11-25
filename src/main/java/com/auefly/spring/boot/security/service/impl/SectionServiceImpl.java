@@ -21,6 +21,12 @@ public class SectionServiceImpl implements SectionService {
     public void save(SectionDto sectionDto) {
         Section section = new Section();
 
+        if (sectionDto.getId() != null) {
+            section = repository.findById(sectionDto.getId()).get();
+            section.setUpdatedAt(LocalDateTime.now());
+        } else {
+            section.setCreatedAt(LocalDateTime.now());
+        }
         section.setTitle(sectionDto.getTitle());
         section.setSortOrder(sectionDto.getSortOrder());
         section.setDescription(sectionDto.getDescription());

@@ -23,7 +23,7 @@
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <form id="post-form" method="post" action="#" th:action="@{/admin/sections/update}" enctype="multipart/form-data" th:object="${section}">
+              <form id="post-form" method="post" action="#" th:action="@{/admin/sections}" enctype="multipart/form-data" th:object="${section}" class="mb-0">
                 <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" name="id" th:value="*{id}">
                 <input type="hidden" name="collection_id" th:value="${param.collection_id} ">

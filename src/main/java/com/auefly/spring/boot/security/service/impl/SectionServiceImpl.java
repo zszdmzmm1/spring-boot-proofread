@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class SectionServiceImpl implements SectionService {
@@ -26,5 +27,10 @@ public class SectionServiceImpl implements SectionService {
         section.setCollection(new Collection(sectionDto.getCollection_id()));
         section.setCreatedAt(LocalDateTime.now());
         repository.save(section);
+    }
+
+    @Override
+    public Optional<Section> findById(Long id) {
+        return repository.findById(id);
     }
 }

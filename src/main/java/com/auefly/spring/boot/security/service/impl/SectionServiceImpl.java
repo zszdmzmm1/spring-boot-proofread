@@ -39,4 +39,9 @@ public class SectionServiceImpl implements SectionService {
     public Optional<Section> findById(Long id) {
         return repository.findById(id);
     }
+
+    @Override
+    public void destroy(Long id) {
+        repository.deleteById(id);
+    }
 }

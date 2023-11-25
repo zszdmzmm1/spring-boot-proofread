@@ -4,6 +4,7 @@ import com.auefly.spring.boot.security.dto.SectionDto;
 import com.auefly.spring.boot.security.entity.Section;
 import com.auefly.spring.boot.security.service.CollectionService;
 import com.auefly.spring.boot.security.service.SectionService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -77,5 +78,17 @@ public class SectionController {
         sectionService.save(sectionDto);
 
         return "redirect:/admin/collections/edit/" + sectionDto.getCollection_id();
+    }
+
+    @DeleteMapping("destroy/{id}")
+    @Transactional
+    public String destroy(@PathVariable Long id) {
+        Section section = sectionService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        sectionService.destroy(id);
+        if (!section.getLectures().isEmpty()) {
+            //lectureService.destroyAllById(section.getLectures().stream().map(Lecture::getId).collect(Collectors.toList()));
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There are also lectures under the section, which are not allowed to be deleted directly.");
+        }
+        return "redirect:/admin/collections/edit/" + section.getCollection().getId();
     }
 }

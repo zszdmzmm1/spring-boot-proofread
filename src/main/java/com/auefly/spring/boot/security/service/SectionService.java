@@ -10,4 +10,6 @@ public interface SectionService {
     void save(SectionDto sectionDto);
 
     Optional<Section> findById(Long id);
+
+    void destroy(Long id);
 }

@@ -91,6 +91,26 @@
                                                 <form th:id="${'destroy-form-' + lecture.id}" th:action="@{'/admin/lectures/destroy/' + ${lecture.id}}" th:method="delete" style="display: none;"></form>
                                             </a>
                                         </span>
+                                        <ol th:if="${#arrays.length(lecture.blocks) > 0}">
+                                            <th:block th:each="block : ${lecture.blocks}">
+                                                <li class="block-item">
+                                                    <i class="fas fa-cubes"></i>
+                                                    <span th:text="|block-${block.id}|">#-block.id</span>
+                                                    <span class="block-actions small pl-2">
+                                                        <a href="#" th:href="@{'/admin/blocks/edit/' + ${block.id}(collection_id=${collection.id}, lecture_id=${lecture.id})}"><i class="fa fa-edit"></i></a>
+                                                        <a href="#"
+                                                            th:onclick="|event.preventDefault(); if(confirm('你确定要删除吗?')) document.getElementById('block-destroy-form-${block.id}').submit();|">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                            <form th:id="${'block-destroy-form-' + block.id}" th:action="@{'/admin/blocks/destroy/' + ${block.id}}" th:method="delete" style="display: none;">
+                                                            </form>
+                                                        </a>
+                                                    </span>
+                                                </li>
+                                            </th:block>
+                                        </ol>
+                                        <div class="block-plus small" style="margin-left: 20px;">
+                                            <a href="#" th:href="@{/admin/blocks/create(collection_id=${collection.id}, lecture_id=${lecture.id})}"><i class="fa fa-plus block-plus-icon"></i>Add New Block</a>
+                                        </div>
                                     </li>
                                 </th:block>
                             </ol>

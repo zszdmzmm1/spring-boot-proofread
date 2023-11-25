@@ -5,10 +5,8 @@ import com.auefly.spring.boot.security.entity.Lecture;
 import com.auefly.spring.boot.security.service.CollectionService;
 import com.auefly.spring.boot.security.service.LectureService;
 import com.auefly.spring.boot.security.service.SectionService;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
-@Controller("backendLectureController")
+@Controller
 @RequestMapping("/admin/lectures")
 public class LectureController {
     @Autowired
@@ -39,20 +37,13 @@ public class LectureController {
         return "backend/lecture/create";
     }
 
-    @Value("${custom.block.separator}")
-    String blockSeparator;
-
     @PostMapping("")
-    @Transactional
-    public String store(@Valid @ModelAttribute("lecture") LectureDto lectureDto,
-                        BindingResult result) {
+    String store(@Valid @ModelAttribute("lecture") LectureDto lectureDto,
+                 BindingResult result) {
         if(result.hasErrors()) {
             return "backend/lecture/create";
         }
-        Lecture lecture = lectureService.save(lectureDto);
-        if (lectureDto.getContent()!=null && lectureDto.getContent().contains(blockSeparator)) {
-            lectureService.saveBlocks(lecture.getId(), lectureDto);
-        }
+        lectureService.save(lectureDto);
         return "redirect:/admin/collections/edit/" + lectureDto.getCollection_id();
     }
 
@@ -92,16 +83,5 @@ public class LectureController {
         lectureService.save(lectureDto);
 
         return "redirect:/admin/collections/edit/" + lectureDto.getCollection_id();
-    }
-
-    @DeleteMapping("/destroy/{id}")
-    @Transactional
-    public String destroy(@PathVariable Long id) {
-        Lecture lecture = lectureService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lecture Not Found"));
-        lectureService.destroy(id);
-        if (!lecture.getBlocks().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There are also blocks under the lecture, which are not allowed to be deleted directly.");
-        }
-        return "redirect:/admin/collections/edit/" + lecture.getCollection().getId();
     }
 }

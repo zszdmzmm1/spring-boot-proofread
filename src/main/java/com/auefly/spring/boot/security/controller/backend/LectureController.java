@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
-@Controller
+@Controller("backendLectureController")
 @RequestMapping("/admin/lectures")
 public class LectureController {
     @Autowired

@@ -23,7 +23,7 @@
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <form id="block-form" method="post" action="#" th:action="@{/admin/blocks}" enctype="multipart/form-data" th:object="${block}">
+              <form id="block-form" method="post" action="#" th:action="@{/admin/blocks}" enctype="multipart/form-data" th:object="${block}" class="mb-0">
                 <div th:replace="~{backend/block/_fragment :: #fragment-block-form}"></div>
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">保存</button>

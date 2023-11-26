@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" th:fragment="layout(title, header_appendent, main_content)" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html lang="en" th:fragment="layout(title, header_appendent, main_content, js)" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -97,7 +97,8 @@
             </p>
         </div>
     </footer>
-    <script type="module" th:src="@{/build/assets/app.js}" src="/build/assets/app.js"></script>
+    <script th:src="@{/build/assets/app.js}" src="/build/assets/app.js"></script>
+    <th:block th:replace="${js}"/>
 
 </body>
 </html>

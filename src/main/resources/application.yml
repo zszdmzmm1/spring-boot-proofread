@@ -20,3 +20,7 @@ backend:
   menus:
     - {name: Users, url: /admin/users, icon: users}
     - {name: Collections, url: /admin/collections, icon: layer-group}
+
+custom:
+  block:
+    separator: "===---block---==="

@@ -28,13 +28,13 @@
             enable: false,
           },
           upload: {
-            url: '/backend/images/uploadFromVditor',
+            url: '/admin/images/uploadFromVditor',
             fieldName: 'image[]',
             max: 10 * 1024 * 1024,
             headers: {
               'accept': 'application/json',
             },
-            linkToImgUrl: '/backend/images/uploadLinkFromPasteToVditor',
+            linkToImgUrl: '/admin/images/uploadLinkFromPasteToVditor',
             linkToImgFormat: function (responseText) {
               vditor.setValue(vditor.getValue().replace(JSON.parse(responseText).data.originalURL, JSON.parse(responseText).data.url));
               /**

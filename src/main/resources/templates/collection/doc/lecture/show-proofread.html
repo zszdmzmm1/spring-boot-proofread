@@ -26,10 +26,10 @@
                             <th:block th:each="block, stats: ${lecture.blocks}">
                                 <p class="font-size-14"><span class="toc-hash" th:id="|id-block-${block.id}|" th:text="'区块#' + ${block.id}">区块#id</span></p>
                                 <div class="row" th:id="|block-${block.id}|">
-                                    <div class="col-md-6 content-editable" th:id="'lecture_blocks--content--' + ${block.id}" th:text="${block.content}">
+                                    <div class="col-md-6 content-editable" th:data-lecture_id="${lecture.id}" th:data-collection_id="${lecture.collection.id}" th:id="'lecture_blocks--content--' + ${block.id}" th:text="${block.content}">
                                         block.content
                                     </div>
-                                    <div class="col-md-6 content-editable" th:id="'lecture_blocks--content_translation--' + ${block.id}" th:text="${block.contentTranslation}">
+                                    <div class="col-md-6 content-editable" th:data-lecture_id="${lecture.id}" th:data-collection_id="${lecture.collection.id}" th:id="'lecture_blocks--contentTranslation--' + ${block.id}" th:text="${block.contentTranslation}">
                                         block.content_translation
                                     </div>
                                 </div>
@@ -147,13 +147,13 @@
                             enable: false,
                         },
                         upload: {
-                            url: '/backend/images/uploadFromVditor',
+                            url: '/admin/images/uploadFromVditor',
                             fieldName: 'image[]',
                             max: 10 * 1024 * 1024,
                             headers: {
                                 'accept': 'application/json',
                             },
-                            linkToImgUrl: '/backend/images/uploadLinkFromPasteToVditor',
+                            linkToImgUrl: '/admin/images/uploadLinkFromPasteToVditor',
                             linkToImgFormat: function (responseText) {
                                 vditor.setValue(vditor.getValue().replace(JSON.parse(responseText).data.originalURL, JSON.parse(responseText).data.url));
                                 /**
@@ -168,7 +168,36 @@
                             index: 1080
                         },
                         esc (content) {
-                            //console.log('用户按下了 ESC，Markdown 内容为：\n' + content)
+                            let split = editorId.split('--');
+                            let blockColumnName = split[1];
+                            let blockId = split[2];
+                            let blockContentType = split[3];
+                            let data = {};
+                            data['id'] = blockId;
+                            data[blockColumnName] = content;
+                            data['lecture_id'] = contentEditableElement.data('lecture_id');
+                            data['collection_id'] = contentEditableElement.data('collection_id');
+                            data[blockContentType] = contentEditableElement.text();
+                            if (confirm('你确定要编辑(block_id = ' + blockId + ')吗')) {
+                                $.ajax({
+                                    url: "/docs/lecture/block/proofread",
+                                    data: data,
+                                    type:"PUT",
+                                })
+                                    .done(function (response) {
+                                        if('SUCCESS' === response) {
+                                            location.reload();
+                                        } else {
+                                            console.log(response);
+                                            alert(response);
+                                        }
+                                    })
+                                    .fail(function (xhr, status, errorThrown) {
+                                        alert("Sorry, there was a problem!");
+                                        console.log("Error: " + errorThrown);
+                                        console.log("Status: " + status);
+                                    })
+                            }
                             contentEditableElement.removeClass('p-0');
                             vditor.destroy();
                         }

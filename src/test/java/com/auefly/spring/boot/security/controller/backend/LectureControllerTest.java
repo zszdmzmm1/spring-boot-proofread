@@ -31,6 +31,8 @@ public class LectureControllerTest extends WithMockUserForAdminBaseTest {
     LectureRepository lectureRepository;
     @Autowired
     BlockService blockService;
+    @Autowired
+    BlockRepository blockRepository;
 
     @Test
     @DisplayName("新增一个lecture")
@@ -237,5 +239,38 @@ public class LectureControllerTest extends WithMockUserForAdminBaseTest {
         Optional<Collection> co = collectionRepository.findById(collection.getId());
         Assertions.assertTrue(co.isPresent());
         collectionRepository.delete(co.get());
+    }
+
+    @Test
+    @DisplayName("在文章详情也页面切换语言")
+    void showLectureWithCtParam() throws Exception {
+        long blockId = 16L;
+        Block block = blockRepository.findById(blockId).orElseThrow();
+
+        String ctParam = "c";
+        String expected = getExpectedString(block, ctParam);
+        mockMvc.perform(MockMvcRequestBuilders.get("/docs/lecture/20?ct=" + ctParam))
+                .andExpect(MockMvcResultMatchers.model().attribute("content", expected))
+        ;
+
+        ctParam = "t";
+        expected = getExpectedString(block, "t");
+        mockMvc.perform(MockMvcRequestBuilders.get("/docs/lecture/20?ct=" + ctParam))
+                .andExpect(MockMvcResultMatchers.model().attribute("content", expected))
+        ;
+    }
+
+    private String getExpectedString(Block block, String ctParam) {
+        Lecture lecture = block.getLecture();
+
+        StringBuilder allBlocks = new StringBuilder();
+        for (Block b : lecture.getBlocks()) {
+            String bc = "t".equals(ctParam) ? b.getContentTranslation() : b.getContent();
+            if (bc != null) {
+                allBlocks.append(bc).append(System.lineSeparator());
+            }
+        }
+
+        return allBlocks.toString();
     }
 }

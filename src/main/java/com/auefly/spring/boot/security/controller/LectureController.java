@@ -28,7 +28,8 @@ public class LectureController {
     BlockService blockService;
 
     @GetMapping("/docs/lecture/{id}")
-    String show(@PathVariable Long id, Model model) {
+    String show(@PathVariable Long id, Model model,
+                @RequestParam(value = "ct", defaultValue = "c")String ct) {
         Lecture lecture = lectureService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         model.addAttribute("lecture", lecture);
 
@@ -37,10 +38,13 @@ public class LectureController {
             allBlocks.append(lecture.getContent());
         } else {
             for (Block block : lecture.getBlocks()) {
-                allBlocks.append(block.getContent()).append(System.lineSeparator());
+                String bc = "t".equals(ct) ? block.getContentTranslation() : block.getContent();
+                if (bc != null) {
+                    allBlocks.append(bc).append(System.lineSeparator());
+                }
             }
         }
-        model.addAttribute("content", allBlocks);
+        model.addAttribute("content", allBlocks.toString());
 
         return "collection/doc/lecture/show";
     }

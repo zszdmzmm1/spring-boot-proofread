@@ -51,4 +51,17 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         return userRepository.findAll(pageable);
     }
+
+    @Override
+    public void saveUser(User user) {
+        user.setEnabled(true);
+        user.setCreatedAt(LocalDateTime.now());
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public User findUserBySocialId(String socialId) {
+        return userRepository.findFirstBySocialId(socialId);
+    }
 }

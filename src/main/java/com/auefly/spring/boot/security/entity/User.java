@@ -22,6 +22,9 @@ public class User {
     private String phone;
     private LocalDateTime createdAt;
     private boolean enabled;
+    private String avatar;
+    private String socialProvider;
+    private String socialId;
 
     public User(Long id) {
         this.id = id;

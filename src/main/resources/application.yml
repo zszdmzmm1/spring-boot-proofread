@@ -12,6 +12,14 @@ spring:
     show-sql: true
     #generate-ddl: true
 
+  security:
+    oauth2:
+      client:
+         registration:
+           github:
+            client-id: 'your-client-id'
+            client-secret: 'your-client-secret'
+
   mail:
     host: localhost
     port: 1025

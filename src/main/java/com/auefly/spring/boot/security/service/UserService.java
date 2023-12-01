@@ -12,4 +12,8 @@ public interface UserService {
     void updatePassword(User user);
 
     Page<User> findAll(int pageNumber, int pageSize);
+
+    void saveUser(User user);
+
+    User findUserBySocialId(String socialId);
 }

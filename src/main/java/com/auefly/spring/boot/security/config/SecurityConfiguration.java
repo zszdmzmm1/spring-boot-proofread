@@ -18,6 +18,8 @@ public class SecurityConfiguration {
     @Autowired
     JpaUserDetailsService jpaUserDetailsService;
 
+    @Autowired
+    CustomOAuth2LoginSuccessHandler customOAuth2LoginSuccessHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -28,6 +30,10 @@ public class SecurityConfiguration {
                         .usernameParameter("email")
                         .passwordParameter("password")
 //                        .defaultSuccessUrl("/")
+                )
+                .oauth2Login(o2l -> o2l
+                        .loginPage("/login")
+                        .successHandler(customOAuth2LoginSuccessHandler)
                 )
                 .logout((logout) -> logout
                         .logoutUrl("/logout")
